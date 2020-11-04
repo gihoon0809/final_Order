@@ -12,7 +12,8 @@ public class Order {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     private Long pizzaId;
-    private String orderStatus;
+    // LDH 소스추가 초기값 설정
+    private String orderStatus ="Ordered";
     private Long qty;
 
     @PostPersist
@@ -20,10 +21,6 @@ public class Order {
         Ordered ordered = new Ordered();
         BeanUtils.copyProperties(this, ordered);
         ordered.publishAfterCommit();
-
-        // checkpoint4. req/res LDH 202011041036
-        // [소스추가] order 상태 추가
-        this.orderStatus = "Ordered";
 
         //Following code causes dependency to external APIs
         // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
