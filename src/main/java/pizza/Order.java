@@ -1,4 +1,4 @@
-package newpizza;
+package pizza;
 
 import javax.persistence.*;
 import org.springframework.beans.BeanUtils;
@@ -21,18 +21,22 @@ public class Order {
         BeanUtils.copyProperties(this, ordered);
         ordered.publishAfterCommit();
 
+        // checkpoint4. req/res LDH 202011041036
+        // [소스추가] order 상태 추가
+        this.orderStatus = "Ordered";
+
         //Following code causes dependency to external APIs
         // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
 
-        newpizza.external.Payment payment = new newpizza.external.Payment();
+        pizza.external.Payment payment = new pizza.external.Payment();
 
-        // res/req 구현 추가
+        // checkpoint4. req/res LDH 202011041036
+        // [소스추가] payment 에 order 정보 setting
         payment.setOrderId(this.getId());
-        payment.setPaymentStatus("Ordered");
+        payment.setPaymentStatus("Paid");
 
-        System.out.println("===============" + payment.getOrderId() + "  " + payment.getPaymentStatus());
         // mappings goes here
-        OrderApplication.applicationContext.getBean(newpizza.external.PaymentService.class)
+        OrderApplication.applicationContext.getBean(pizza.external.PaymentService.class)
             .doPayment(payment);
 
 

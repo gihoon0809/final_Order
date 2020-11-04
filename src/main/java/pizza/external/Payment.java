@@ -1,4 +1,4 @@
-package newpizza.external;
+package pizza.external;
 
 public class Payment {
 
